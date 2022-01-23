@@ -8,6 +8,7 @@ import com.comphenix.protocol.wrappers.nbt.NbtFactory;
 import com.google.common.collect.Lists;
 import de.febanhd.anticrash.checks.AbstractCheck;
 import de.febanhd.anticrash.checks.CheckResult;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -28,6 +29,13 @@ public class NBTTagCheck extends AbstractCheck {
     @Override
     public void onPacketReceiving(PacketEvent event) {
         Player player = event.getPlayer();
+
+        if(event.getPacket().getType().equals(PacketType.Play.Client.SET_CREATIVE_SLOT)
+        && player.getGameMode() != GameMode.CREATIVE){
+            this.sendInvalidPacketWarning(player, event, "Sent creative slot packet without being in creative mode");
+            event.setCancelled(true);
+        }
+
         PacketContainer packet = event.getPacket();
         ItemStack stack = packet.getItemModifier().readSafely(0);
         if(stack == null) return;

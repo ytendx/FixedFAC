@@ -91,6 +91,20 @@ public class AbstractCheck extends PacketAdapter implements ICheck {
         });
     }
 
+    public void sendInvalidPacketWarning(Player player, String reason) {
+        if(lastReasonsMap.containsKey(player) && lastReasonsMap.get(player).equals(reason)) return;
+        lastReasonsMap.put(player, reason);
+
+        String playerName = this.getPlayerName(player);
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(this.getPlugin(), () -> {
+            new Broadcast("anticrash.notify", players -> {
+                players.sendMessage(AntiCrash.PREFIX + "§c" + playerName + " §7tryed to crash the server!");
+                players.sendMessage(AntiCrash.PREFIX + "§cReason: §7" + reason);
+            });
+        });
+    }
+
     public void sendCrashWarning(Player player, String reason) {
         this.closeChannel(player);
         if(lastReasonsMap.containsKey(player) && lastReasonsMap.get(player).equals(reason)) return;

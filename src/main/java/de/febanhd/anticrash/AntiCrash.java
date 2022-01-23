@@ -59,6 +59,8 @@ public class AntiCrash {
         this.checks.add(new DosCheck());
         this.checks.add(new SignCheck());
         this.checks.add(new EnderPortalCheck());
+        this.checks.add(new Log4JExploitCheck());
+        this.checks.add(new ChatMessageCheck());
 
     }
 
