@@ -21,9 +21,6 @@ public class ByteBufDecoderHandler extends ByteToMessageDecoder {
     private final Player player;
     private long lastWarningSended = 0;
 
-    private int byteBufFrequency = 0;
-    private long lastByteBufFrequency = 0;
-
     public ByteBufDecoderHandler(Player player) {
         this.player = player;
     }
@@ -41,20 +38,6 @@ public class ByteBufDecoderHandler extends ByteToMessageDecoder {
             return;
         }
 
-        if (byteBuf.array().length > 1000) {
-            if (lastByteBufFrequency == 0)
-                lastByteBufFrequency = System.currentTimeMillis();
-            if (System.currentTimeMillis() - lastByteBufFrequency >= 1000L) {
-                lastByteBufFrequency = System.currentTimeMillis();
-                byteBufFrequency = 0;
-            } else {
-                byteBufFrequency++;
-            }
-            if (byteBufFrequency > 5) {
-                this.sendCrashWarning(player, "Too high bytebuf frequency");
-                return;
-            }
-        }
         if (byteBuf.array().length > ConfigCache.getInstance().getValue("decode.maxLength", 8000, Integer.class)) {
             this.sendCrashWarning(player, "Too high packet size");
             return;

@@ -9,5 +9,8 @@
         <module name="FAC" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="FAC" target="1.8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

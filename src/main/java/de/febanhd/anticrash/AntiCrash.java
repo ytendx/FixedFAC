@@ -17,7 +17,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Getter
 public class AntiCrash {
 
-    public static final String PREFIX = "§8[§cFAC§8] §r";
+    public static final String PREFIX = "§8[§cFixed-FAC§8] §r";
 
     public static void init(JavaPlugin plugin) {
          new AntiCrash(plugin);
