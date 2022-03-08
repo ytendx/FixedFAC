@@ -41,7 +41,7 @@ public class DosCheck extends AbstractCheck {
     private int cpsToUnlock;
 
     private int connectionPerSecond = 0;
-    private int cpsLimit = ConfigCache.getInstance().getValue("doscheck.cpsLimit", 130, Integer.class);
+    private int cpsLimit = ConfigCache.getInstance().getValue("doscheck.cpsLimit", 20, Integer.class);
     private long blockTime = ConfigCache.getInstance().getValue("doscheck.blocktime", 300000, Integer.class);
 
     private boolean debug = ConfigCache.getInstance().getValue("debugMode", false, Boolean.class);
@@ -194,9 +194,11 @@ public class DosCheck extends AbstractCheck {
 
         if (blockedIPs.containsKey(host)) return false;
 
-        if (this.getConnections(host, 60000).size() > 150) {
+        if (this.getConnections(host, 60000).size() > 150)
             this.blockIP(host, "Too many connections in the last minute (> 150)");
-        }
+        
+        if(this.getComnnections(host, 1000).size() > 20)
+            this.blockIP(host, "Too many connections last second (>20)");
 
         return !this.blockedIPs.containsKey(host);
     }
@@ -239,11 +241,8 @@ public class DosCheck extends AbstractCheck {
                 Bukkit.getConsoleSender().sendMessage(AntiCrash.PREFIX + "§cReason: §7" + reason);
             });
         }else if(!this.isAttack && !this.debug) {
-            Bukkit.getOnlinePlayers().forEach(player -> {
-                if(player.hasPermission("anticrash.notify")) {
-                    ActionbarUtil.sendActionbar(player, AntiCrash.PREFIX + "§cBlocked IP: §7" + ip);
-                }
-            });
+            Bukkit.getOnlinePlayers().stream().filter(player -> player.hasPermission("anticrash.notify")).forEach(player ->
+                ActionbarUtil.sendActionbar(player, AntiCrash.PREFIX + "§cBlocked IP: §7" + ip));
         }
     }
 
@@ -281,7 +280,7 @@ public class DosCheck extends AbstractCheck {
 
     @Override
     public void onPacketReceiving(PacketEvent event) {
-
+        
     }
 
     public MCChannelInjection getInjection() {
