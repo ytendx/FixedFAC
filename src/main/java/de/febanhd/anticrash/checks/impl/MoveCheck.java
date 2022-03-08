@@ -41,8 +41,8 @@ public class MoveCheck extends AbstractCheck implements Listener {
             }
 
             if(packetsSent.containsKey(event.getPlayer())){
-                if(packetsSent.get(event.getPlayer()) >= 50){
-                    if(packetsSent.get(event.getPlayer()) == 50)
+                if(packetsSent.get(event.getPlayer()) >= 30){
+                    if(packetsSent.get(event.getPlayer()) == 30)
                     this.sendCrashWarning(event.getPlayer(), event, "Player sent too much position packets in one sec (>50)");
                     event.setCancelled(true);
                 }
